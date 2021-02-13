@@ -1,11 +1,12 @@
 const app = require('express')();
 const http = require('http').createServer(app);
+const { log } = require('console');
 var cors = require('cors')
 app.use(cors())
 
 const io = require('socket.io')(http, {
   cors: {
-    origin: "http://localhost:8080",
+    // origin: "http://localhost:8080",
     methods: ["GET", "POST"],
     credentials: true,
   }
@@ -21,34 +22,53 @@ function makeid(length) {
    return result;
 }
 
-class Room{
-
-  constructor(roomID, videoCode){
-    this.roomID = roomID;
-    this.videoCode = videoCode;
-  }
-  
-}
-
-var rooms = {}
+rooms = []
 
 // socket.io stuff
+io.on("connection", (socket)=>{
+    console.log("User connected");
+
+    // User joins the room
+    socket.on("joined_room", (roomID) => {
+        if(rooms.includes(roomID)){
+            socket.join(roomID);
+        }
+        else{
+            console.log("Room doesn't exist");
+        }
+    });
+
+    // User leaves the room
+    // socket.on('disconnect', () => {
+    // }); 
+
+    // User pauses
+    socket.on("pause_video", (roomID) => {
+        io.to(roomID).emit("_pause_video") 
+    });
+
+    // User plays
+    socket.on("play_video", (roomID) => {
+        io.to(roomID).emit("_play_video") 
+    });
+
+});
 
 
 // http stuff
 app.get('/create_room',(req, res) => {
-  var roomID = makeid(6);
-  rooms[roomID] = new Room(roomID, "GMIQ8ZWRQXo");
-  console.log("Created room " + rooms[roomID].roomID);
-    return res.send(rooms[roomID]);
+    var roomID = makeid(6);
+    rooms.push(roomID);
+    console.log("Created room " + roomID);
+    return res.send({'roomID':roomID})
 });
 
-app.get('/get_room/:roomID',(req, res) => {
-    if (rooms[req.params.roomID]){
-        return res.send(rooms[req.params.roomID]);
+app.get('/room_exists/:roomID',(req, res) => {
+    if (rooms.includes(req.params.roomID)){
+        return res.sendStatus(200); 
     }
     else{
-        return res.sendStatus(404)
+        return res.sendStatus(404);
     }
 });
 
