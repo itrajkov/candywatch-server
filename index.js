@@ -42,21 +42,25 @@ io.on("connection", (socket)=>{
     // socket.on('disconnect', () => {
     // }); 
 
-    // User pauses
+    // User pauses video
     socket.on("pause_video", (roomID) => {
         io.to(roomID).emit("_pause_video") 
     });
 
-    // User plays
+    // User plays video
     socket.on("play_video", (roomID) => {
         io.to(roomID).emit("_play_video") 
     });
 
-    // User skips
+    // User skips video 
     socket.on("skip_video", (roomID, timestamp) => {
         io.to(roomID).emit("_skip_video", timestamp) ;
     });
 
+    // User sets video
+    socket.on("set_video", (roomID, vidCode) => {
+        io.to(roomID).emit("_set_video", vidCode) ;
+    });
 });
 
 
