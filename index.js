@@ -1,7 +1,6 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const { log } = require('console');
-const { v4: uuidv4 } = require('uuid');
 var cors = require('cors')
 app.use(cors())
 
@@ -87,7 +86,6 @@ app.get('/room_exists/:roomID',(req, res) => {
         return res.sendStatus(404);
     }
 });
-
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello world</h1>');
