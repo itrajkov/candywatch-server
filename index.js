@@ -1,6 +1,7 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const { log } = require('console');
+const { v4: uuidv4 } = require('uuid');
 var cors = require('cors')
 app.use(cors())
 
@@ -66,8 +67,14 @@ io.on("connection", (socket)=>{
 
 // HTTP stuff
 app.get('/create_room',(req, res) => {
-    var roomID = makeid(6);
-    rooms.push(roomID);
+    var roomID = makeid(8);
+    if(!rooms.includes(roomID))
+        rooms.push(roomID);
+    else{
+        roomID = makeid(8);
+        rooms.push(roomID);
+    }
+        
     console.log("Created room " + roomID);
     return res.send({'roomID':roomID})
 });
