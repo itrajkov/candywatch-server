@@ -52,10 +52,15 @@ io.on("connection", (socket)=>{
         io.to(roomID).emit("_play_video") 
     });
 
+    // User skips
+    socket.on("skip_video", (roomID, timestamp) => {
+        io.to(roomID).emit("_skip_video", timestamp) ;
+    });
+
 });
 
 
-// http stuff
+// HTTP stuff
 app.get('/create_room',(req, res) => {
     var roomID = makeid(6);
     rooms.push(roomID);
