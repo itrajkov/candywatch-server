@@ -19,6 +19,7 @@ As I stated, this was hacked together very quickly, and is very rough around the
 This will be refactored according to the scale of the project.
 
 # Setting up the development environment
+**Node version:** v16.20.2
 ```bash
 $ git clone https://github.com/itrajkov/candywatch-server.git
 $ cd candywatch-server
